@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -19,6 +22,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @GetMapping("/")
     public String showAllUsers(Model model) {
         List<User> userList = userService.getAllUsers();
@@ -27,7 +33,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String addingUser(@ModelAttribute("userForm") User user){
+    public String addingUser(@ModelAttribute("userForm") User user, @RequestParam("role") String roleName) {
+
+        Role userRole = roleRepository.getRoleByName(roleName);
+
+        if (userRole == null) {
+            userRole = new Role(roleName);
+            roleRepository.save(userRole);
+        }
+
+        user.setRoles(Collections.singleton(userRole));
         userService.saveUser(user);
         return "redirect:/";
     }
