@@ -27,17 +27,24 @@ public class Init implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if (userRepository.findAll().isEmpty() && roleRepository.findAll().isEmpty() ) {
-            Role roleUser = new Role("ROLE_USER");
-            Role roleAdmin = new Role("ROLE_ADMIN");
+            Role roleUser = new Role("USER");
+            Role roleAdmin = new Role("ADMIN");
+
             User user = new User("Vasya", "Ivanov");
             user.setUsername("user");
             user.setPassword("user");
 
+            User user1 = new User("Petya", "Valenok");
+            user1.setUsername("user1");
+            user1.setPassword("user1");
+
             roleUser.addUserToRole(user);
             user.addRoleToUser(roleAdmin);
+            user.addRoleToUser(roleUser);
+            user1.addRoleToUser(roleUser);
 
             roleRepository.saveAll(List.of(roleUser, roleAdmin));
-            userRepository.save(user);
+            userRepository.saveAll(List.of(user1, user));
         }
 
     }
