@@ -1,66 +1,77 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.DAO.UserDAO;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.Collections;
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final UserRepository userRepository;
 
-    @Autowired
-    private final UserDAO userDAO;
-    @Autowired
-    private RoleRepository roleRepository;
-    public UserServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
 
     @Override
     public List<User> getAllUsers() {
-        return userDAO.getAllUsers();
-    }
-
-    @Override
-    @Transactional
-    public void deleteUser(Long id) {
-        userDAO.deleteUser(id);
-    }
-
-    @Override
-    @Transactional
-    public void saveUser(User user) {
-
-//        Role userRole = roleRepository.getRoleByName("ROLE_USER");
-//        if (userRole == null) {
-//            userRole = new Role("ROLE_USER");
-//            roleRepository.save(userRole);
-//        }
-//        System.out.println("FAIL");
-//        user.setRoles(Collections.singleton(userRole));
-        user.setPassword(user.getPassword());
-        userDAO.saveUser(user);
+        return userRepository.findAll();
     }
 
     @Override
     public User getUser(Long id) {
-        return userDAO.getUser(id);
+        return userRepository.getById(id);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteUser(Long id) {
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
+
+    }
+
+    @Override
+    @Transactional
+    public boolean saveUser(User user) {
+        User userFromDB = userRepository.findByUsername(user.getUsername());
+        if (userFromDB != null) {
+            return false;
+        }
+        user.setPassword(user.getPassword());
+        userRepository.save(user);
+
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateUser(User user) {
+        userRepository.save(user);
+        return true;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDAO.getUser(username);
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
     }
+
 }
