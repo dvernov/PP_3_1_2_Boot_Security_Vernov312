@@ -2,6 +2,9 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
@@ -29,26 +33,21 @@ public class UserController {
     private RoleService roleService;
 
     @GetMapping("/")
-    public String showAllUsers(Model model) {
-        model.addAttribute("userList", userService.getAllUsers());
-
+    public String index() {
         return "index";
     }
 
     @PostMapping("/register")
     public String addingUser(@ModelAttribute("userForm") User userForm
-            , @RequestParam(value = "role", required = false) Long roleId
-            , Model model) {
+            , @RequestParam(value = "role", required = false) Long roleId) {
 
         if (userForm.getId() == null) {
-            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
             userForm.addRoleToUser(roleService.getRole(roleId));
             userService.saveUser(userForm);
         } else {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             userService.updateUser(userForm);
         }
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
     @GetMapping("/addUser")
@@ -68,9 +67,24 @@ public class UserController {
     }
 
     @PostMapping("/deleteUser")
-    public String deleteUser(@RequestParam("id") Long id) {
+    public String deleteUser(@RequestParam("id") Long id, HttpServletRequest request) {
         userService.deleteUser(id);
-        return "redirect:/";
+        return "redirect:" + request.getHeader("Referer");
+    }
+
+    @GetMapping("/admin")
+    public String adminPage(Model model) {
+        model.addAttribute("userList", userService.getAllUsers());
+        return "admin";
+    }
+
+    @GetMapping("/user")
+    public String userPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findByUserName(userDetails.getUsername());
+        model.addAttribute("userForm", user);
+        return "user";
     }
 
 

@@ -1,41 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta charset="UTF-8">
-    <title>User List</title>
+    <title>Spring Security Example</title>
 </head>
 <body>
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Last Name</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${userList}">
-        <td th:text="${user.getFirstName()}">Name</td>
-        <td th:text="${user.getLastName()}">Last Name</td>
-        <td>
-            <form th:action="updateUser" method="post">
-                <input type="hidden" name="id" th:value="${user.getId()}">
-                <button type="submit">Update user</button>
-            </form>
-        </td>
-        <td>
-            <form th:action="deleteUser" method="post">
-                <input type="hidden" name="id" th:value="${user.getId()}">
-                <button type="submit">Delete user</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<br><br>
-<form th:action="addUser" method="get">
-    <button type="submit">Add User</button>
-</form>
+<h1>User, welcome spring boot security page!</h1>
+
+<a th:href="@{/user}">to user</a>
+<a th:href="@{/admin}">to admin</a>
+
 </body>
 </html>
+
+

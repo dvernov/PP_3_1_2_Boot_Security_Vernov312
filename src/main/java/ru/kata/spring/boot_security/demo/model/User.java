@@ -5,10 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "all_users")
@@ -26,7 +23,7 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public User() {
     }
@@ -64,13 +61,13 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
     public void addRoleToUser(Role role) {
         if (roles == null) {
-            roles = new ArrayList<>();
+            roles = new HashSet<>();
         }
         roles.add(role);
     }

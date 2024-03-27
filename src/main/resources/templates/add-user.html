@@ -6,25 +6,24 @@
 </head>
 <body>
 
-<h2>User adding</h2>
+<h2>User editing</h2>
 
 <form th:action="register" th:method="post" th:object="${userForm}">
     <input type="hidden" name="id" th:value="${userForm.getId()}">
 
-    <label for="firstName">First Name</label>
+    <label>First Name</label>
     <input type="text" th:field="*{firstName}">
 
-    <label for="lastName">Last Name</label>
+    <label>Last Name</label>
     <input type="text" th:field="*{lastName}">
     <br><br>
-    <label for="username">Username</label>
+    <label>Username</label>
     <input type="text" th:field="*{username}">
-<!--    <div th:if="${usernameError != null}" th:text="${usernameError}"></div>-->
 
-    <label for="password">Password</label>
+    <label>Password</label>
     <input type="text" th:field="*{password}">
 
-    <label for="roles">Roles</label>
+    <label>Roles</label>
     <select th:name="role" th:id="roles">
         <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
     </select>

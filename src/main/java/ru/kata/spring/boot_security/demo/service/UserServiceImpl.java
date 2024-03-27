@@ -21,7 +21,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -61,6 +60,11 @@ public class UserServiceImpl implements UserService {
     public boolean updateUser(User user) {
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public User findByUserName(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
