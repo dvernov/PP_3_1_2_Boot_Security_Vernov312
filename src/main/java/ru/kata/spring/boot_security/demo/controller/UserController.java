@@ -26,11 +26,6 @@ public class UserController {
     @Autowired
     private RoleService roleService;
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
     @PostMapping("/register")
     public String addingUser(@ModelAttribute("userForm") User userForm
             , @RequestParam(value = "role", required = false) Long roleId) {
@@ -56,7 +51,7 @@ public class UserController {
     public String updateUser(@RequestParam(value = "id") Long id, Model model) {
         User user = userService.getUser(id);
         model.addAttribute("userForm", user);
-        model.addAttribute("roles", user.getRoles());
+        model.addAttribute("roles", roleService.getAllRoles());
         return "add-user";
     }
 

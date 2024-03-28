@@ -23,15 +23,21 @@ public class User implements UserDetails {
 
     private String password;
 
+    @Column(unique = true)
+    private String email;
+    private int age;
+
     @ManyToMany
     private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String firstName, String lastName) {
+    public User(String firstName, String lastName, String email, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.age = age;
     }
 
     public Long getId() {
@@ -73,6 +79,21 @@ public class User implements UserDetails {
         roles.add(role);
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -116,6 +137,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 }

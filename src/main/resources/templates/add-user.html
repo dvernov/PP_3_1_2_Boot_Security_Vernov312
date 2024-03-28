@@ -13,16 +13,22 @@
 
     <label>First Name</label>
     <input type="text" th:field="*{firstName}">
-
+    <br><br>
     <label>Last Name</label>
     <input type="text" th:field="*{lastName}">
     <br><br>
+    <label>Email</label>
+    <input type="email" th:field="*{email}">
+    <br><br>
+    <label>Age</label>
+    <input type="number" th:field="*{age}">
+    <br><br>
     <label>Username</label>
     <input type="text" th:field="*{username}">
-
+    <br><br>
     <label>Password</label>
     <input type="text" th:field="*{password}">
-
+    <br><br>
     <label>Roles</label>
     <select th:name="role" th:id="roles">
         <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>

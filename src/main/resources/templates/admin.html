@@ -12,6 +12,8 @@
     <tr>
         <th>Name</th>
         <th>Last Name</th>
+        <th>Age</th>
+        <th>Email</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -19,6 +21,8 @@
     <tr th:each="user : ${userList}">
         <td th:text="${user.getFirstName()}">Name</td>
         <td th:text="${user.getLastName()}">Last Name</td>
+        <td th:text="${user.getAge()}">Age</td>
+        <td th:text="${user.getEmail()}">Email</td>
         <td>
             <form th:action="updateUser" method="post">
                 <input type="hidden" name="id" th:value="${user.getId()}">

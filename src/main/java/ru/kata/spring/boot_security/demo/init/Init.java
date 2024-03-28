@@ -28,11 +28,11 @@ public class Init implements CommandLineRunner {
             Role roleUser = new Role("USER");
             Role roleAdmin = new Role("ADMIN");
 
-            User user = new User("Vasya", "Ivanov");
+            User user = new User("Vasya", "Ivanov", "admin@mail.ru", 44);
             user.setUsername("admin");
             user.setPassword("admin");
 
-            User user1 = new User("Petya", "Valenok");
+            User user1 = new User("Petya", "Valenok", "user@mail.ru", 55);
             user1.setUsername("user");
             user1.setPassword("user");
 

@@ -9,7 +9,6 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,11 +16,9 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final EntityManager entityManager;
 
-    public UserServiceImpl(UserRepository userRepository, EntityManager entityManager) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.entityManager = entityManager;
     }
 
     @Override
@@ -54,7 +51,6 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(user.getPassword());
         userRepository.save(user);
-
         return true;
     }
 
@@ -66,14 +62,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User findByUserName(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+//
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByUsername(username);
+//        if (user == null) {
+//            throw new UsernameNotFoundException("User not found");
+//        }
+//
+//        return org.springframework.security.core.userdetails.User
+//                .withUsername(user.getUsername())
+//                .password(user.getPassword())
+//                .roles(user.getRoles()
+//                        .stream()
+//                        .map(Role::getName)
+//                        .collect(Collectors.toList())
+//                        .toArray(new String[0]))
+//                .build();
+//    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        //TODO:задать вопрос по неймингу
+        User user = userRepository.findUserByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }

@@ -18,4 +18,7 @@ public interface UserService extends UserDetailsService {
     boolean updateUser(User user);
 
     User findByUserName(String username);
+    User findUserByEmail(String email);
+
+    //TODO: нужно ли добавлять эти методы как в репозиторий, так и в юзер сервис?
 }
