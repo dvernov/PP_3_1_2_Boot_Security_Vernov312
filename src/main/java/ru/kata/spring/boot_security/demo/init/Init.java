@@ -7,8 +7,6 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import javax.annotation.PostConstruct;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -26,17 +24,17 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (userRepository.findAll().isEmpty() && roleRepository.findAll().isEmpty() ) {
+        if (userRepository.findAll().isEmpty() && roleRepository.findAll().isEmpty()) {
             Role roleUser = new Role("USER");
             Role roleAdmin = new Role("ADMIN");
 
             User user = new User("Vasya", "Ivanov");
-            user.setUsername("user");
-            user.setPassword("user");
+            user.setUsername("admin");
+            user.setPassword("admin");
 
             User user1 = new User("Petya", "Valenok");
-            user1.setUsername("user1");
-            user1.setPassword("user1");
+            user1.setUsername("user");
+            user1.setPassword("user");
 
             roleUser.addUserToRole(user);
             user.addRoleToUser(roleAdmin);
