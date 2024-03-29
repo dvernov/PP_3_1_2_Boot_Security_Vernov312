@@ -63,6 +63,8 @@ public class UserController {
 
     @GetMapping("/admin")
     public String adminPage(Model model) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        model.addAttribute("userForm", userService.findByUserName(username));
         model.addAttribute("userList", userService.getAllUsers());
         return "admin";
     }

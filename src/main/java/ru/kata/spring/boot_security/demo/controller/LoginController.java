@@ -12,7 +12,6 @@ public class LoginController {
 
     private final AuthProviderImpl authProvider;
 
-
     public LoginController(AuthProviderImpl authProvider) {
         this.authProvider = authProvider;
     }
@@ -23,6 +22,7 @@ public class LoginController {
 
         SecurityContextHolder.getContext().setAuthentication(authProvider.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)));
+
         return "redirect:/";
     }
 
