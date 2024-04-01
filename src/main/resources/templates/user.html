@@ -1,32 +1,62 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+
 <head>
     <meta charset="UTF-8">
-    <title>User List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
 <div th:replace="overlay"></div>
-<h2>USER</h2>
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Last Name</th>
-        <th>Age</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:object="${userForm}">
-        <td th:text="${userForm.getFirstName()}">Name</td>
-        <td th:text="${userForm.getLastName()}">Last Name</td>
-        <td th:text="${userForm.getAge()}">Age</td>
-        <td th:text="${userForm.getEmail()}">Email</td>
-    </tr>
-    </tbody>
-</table>
-<br><br>
-<div th:replace="logout-button"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="sidebar"></div>
+        <div class="col-lg-10 bg-light p-3">
+            <div class="container-fluid">
+                <H1>User information page</H1>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                         tabindex="0">
+                        <ul class="list-group">
+                            <li class="list-group-item bg-light text-dark">About User</li>
+                            <li class="list-group-item">
+                                <table class="table table-hover" th:object="${userForm}">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Last Name</th>
+                                        <th scope="col">Age</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Role</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                    <tr>
+                                        <td th:text="${userForm.getId()}">ID</td>
+                                        <td th:text="${userForm.getFirstName()}">First Name</td>
+                                        <td th:text="${userForm.getLastName()}">Last Name</td>
+                                        <td th:text="${userForm.getAge()}">Age</td>
+                                        <td th:text="${userForm.getEmail()}">Email</td>
+                                        <td th:text="${userForm.getAllRolesString()}">Roles</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

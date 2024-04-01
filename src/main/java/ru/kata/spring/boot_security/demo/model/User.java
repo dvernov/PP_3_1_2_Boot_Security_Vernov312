@@ -75,7 +75,6 @@ public class User implements UserDetails {
         for (Role role : roles.stream().sorted(Comparator.comparing(Role::getName)).collect(Collectors.toList())) {
             str.append(role.getName() + " ");
         }
-
         return str.toString();
     }
 
@@ -108,7 +107,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles(); //тут получаем роли
+        return getRoles();
     }
 
     @Override

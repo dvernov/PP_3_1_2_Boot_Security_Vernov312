@@ -58,7 +58,7 @@ public class Role implements GrantedAuthority {
 
     public void addUserToRole(User user) {
         if (users == null) {
-            users = new HashSet<>();
+            users = new HashSet<>(); //возможно лучше бы TreeSet
         }
         users.add(user);
     }

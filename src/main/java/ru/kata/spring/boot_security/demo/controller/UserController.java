@@ -15,6 +15,7 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @Controller
@@ -27,14 +28,17 @@ public class UserController {
     private RoleService roleService;
 
     @PostMapping("/register")
-    public String addingUser(@ModelAttribute("userForm") User userForm
-            , @RequestParam(value = "role", required = false) Long roleId) {
+    public String addingUser(@ModelAttribute("newUserForm") User newUserForm
+            , @RequestParam(value = "role") List<Long> listOfRoleID) {
 
-        if (userForm.getId() == null) {
-            userForm.addRoleToUser(roleService.getRole(roleId));
-            userService.saveUser(userForm);
+        for (Long roleId : listOfRoleID) {
+            newUserForm.addRoleToUser(roleService.getRole(roleId));
+        }
+
+        if (userService.findByUserName(newUserForm.getUsername()) == null) {
+            userService.saveUser(newUserForm);
         } else {
-            userService.updateUser(userForm);
+            userService.updateUser(newUserForm);
         }
         return "redirect:/admin";
     }
@@ -48,25 +52,20 @@ public class UserController {
     }
 
     @PostMapping("/updateUser")
-    public String updateUser(@RequestParam(value = "id") Long id, Model model) {
-        User user = userService.getUser(id);
-        model.addAttribute("userForm", user);
-        model.addAttribute("roles", roleService.getAllRoles());
-        return "add-user";
+    public String updateUser(@ModelAttribute User user
+            , @RequestParam(value = "role") List<Long> listOfRoleID) {
+
+        for (Long roleId : listOfRoleID) {
+            user.addRoleToUser(roleService.getRole(roleId));
+        }
+        userService.updateUser(user);
+        return "redirect:/admin";
     }
 
     @PostMapping("/deleteUser")
     public String deleteUser(@RequestParam("id") Long id, HttpServletRequest request) {
         userService.deleteUser(id);
         return "redirect:" + request.getHeader("Referer");
-    }
-
-    @GetMapping("/admin")
-    public String adminPage(Model model) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        model.addAttribute("userForm", userService.findByUserName(username));
-        model.addAttribute("userList", userService.getAllUsers());
-        return "admin";
     }
 
     @GetMapping("/user")
@@ -77,6 +76,5 @@ public class UserController {
         model.addAttribute("userForm", user);
         return "user";
     }
-
 
 }
