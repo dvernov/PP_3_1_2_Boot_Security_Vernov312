@@ -5,8 +5,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "all_users")
@@ -70,9 +72,10 @@ public class User implements UserDetails {
 
     public String getAllRolesString() {
         StringBuilder str = new StringBuilder();
-        for (Role role : roles) {
+        for (Role role : roles.stream().sorted(Comparator.comparing(Role::getName)).collect(Collectors.toList())) {
             str.append(role.getName() + " ");
         }
+
         return str.toString();
     }
 
