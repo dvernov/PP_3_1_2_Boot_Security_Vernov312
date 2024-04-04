@@ -6,16 +6,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Component
 public class AuthProviderImpl implements AuthenticationProvider {
 
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
 
-    public AuthProviderImpl(UserService userService) {
-        this.userService = userService;
+    public AuthProviderImpl(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+
     }
 
     @Override
@@ -24,7 +26,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        UserDetails userDetails = userService.findUserByEmail(email);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         if (!password.equals(userDetails.getPassword())) {
             throw new BadCredentialsException("Incorrect password!");
