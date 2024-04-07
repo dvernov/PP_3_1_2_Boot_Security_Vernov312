@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+>
 
 <head>
     <meta charset="UTF-8">
@@ -26,6 +26,9 @@
 
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" th:field="*{email}" id="email">
+
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" th:field="*{username}" id="username">
 
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" th:field="*{password}" id="password">

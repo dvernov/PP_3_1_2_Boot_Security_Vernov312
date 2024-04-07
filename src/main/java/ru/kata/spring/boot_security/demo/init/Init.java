@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.init;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -15,9 +16,12 @@ public class Init implements CommandLineRunner {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public Init(UserRepository userRepository, RoleRepository roleRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public Init(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -30,11 +34,11 @@ public class Init implements CommandLineRunner {
 
             User user = new User("Vasya", "Ivanov", "admin@mail.ru", 44);
             user.setUsername("admin");
-            user.setPassword("admin");
+            user.setPassword(passwordEncoder.encode("admin"));
 
             User user1 = new User("Petya", "Valenok", "user@mail.ru", 55);
             user1.setUsername("user");
-            user1.setPassword("user");
+            user1.setPassword(passwordEncoder.encode("user"));
 
             roleUser.addUserToRole(user);
             user.addRoleToUser(roleAdmin);
