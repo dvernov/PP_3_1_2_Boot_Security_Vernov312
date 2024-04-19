@@ -2,7 +2,7 @@ $(async function () {
     await getTableWithUsers();
     getNewUserForm();
     getDefaultModal();
-    addNewUser();
+    await addNewUser();
 })
 
 
@@ -12,12 +12,11 @@ const userFetchService = {
         'Content-Type': 'application/json',
         'Referer': null
     },
-    // bodyAdd : async function(user) {return {'method': 'POST', 'headers': this.head, 'body': user}},
     findAllUsers: async () => await fetch('/api/users'),
     findAllRoles: async () => await fetch('/api/users/roles'),
     findOneRole: async (id) => await fetch(`/api/users/roles/${id}`),
     findOneUser: async (id) => await fetch(`/api/users/${id}`),
-    addNewUser: async (user) => await fetch('/api/users', {
+    addUser: async (user) => await fetch('/api/users', {
         method: 'POST',
         headers: userFetchService.head,
         body: JSON.stringify(user)
@@ -73,9 +72,6 @@ async function getTableWithUsers() {
     })
 }
 
-
-// что то деалем при открытии модалки и при закрытии
-// основываясь на ее дата атрибутах
 async function getDefaultModal() {
     $('#someDefaultModal').modal({
         keyboard: true,
@@ -92,9 +88,9 @@ async function getDefaultModal() {
             case 'delete':
                 deleteUser(thisModal, userid);
                 break;
-            case 'New User':
-                addNewUser();
-                break;
+            // case 'New User':
+            //     addNewUser();
+            //     break;
         }
     }).on("hidden.bs.modal", (e) => {
         let thisModal = $(e.target);
@@ -125,7 +121,7 @@ async function getNewUserForm() {
 }
 
 async function addNewUser() {
-    $('#addButton').click(async () => {
+    $('#addButton').on('click', async () => {
         let addUserForm = $('#defaultSomeForm')
         let firstname = addUserForm.find('#firstName').val().trim();
         let lastname = addUserForm.find('#lastName').val().trim();
@@ -154,16 +150,25 @@ async function addNewUser() {
             }),
         }
 
-        const response = await userFetchService.addNewUser(data);
+        const response = await userFetchService.addUser(data);
 
         if (response.ok) {
-            await getTableWithUsers();
-            $('#nav-profile-tab').tab('show');
-            addUserForm.find('#firstName').val('');
-            addUserForm.find('#lastName').val('');
-            addUserForm.find('#email').val('');
-            addUserForm.find('#age').val('');
-            addUserForm.find('#username').val('');
+            console.log(response)
+            //await getTableWithUsers();
+
+
+
+            // $('#nav-tab').ariaSelected('true');
+            // $('#nav-tab').class('nav-link active');
+            // $('#nav-profile-tab').ariaSelected('false');
+            // $('#nav-profile-tab').class('nav-link');
+
+            // addUserForm[0].reset();
+            // addUserForm.find('#firstName').val('');
+            // addUserForm.find('#lastName').val('');
+            // addUserForm.find('#email').val('');
+            // addUserForm.find('#age').val('');
+            // addUserForm.find('#username').val('');
         }
         // else {
         //     let body = await response.json();
@@ -237,8 +242,9 @@ async function editUser(modal, id) {
         let firstname = modal.find("#firstName").val().trim();
         let lastname = modal.find("#lastName").val().trim();
         let email = modal.find("#email").val().trim();
-        let roleIds = Array.from(modal.find("#roles option:selected")).map(option => parseInt(option.value));
         let username = modal.find("#username").val().trim();
+
+        let roleIds = Array.from(modal.find("#roles option:selected")).map(option => parseInt(option.value));
         let roles = [];
         for (let roleId of roleIds) {
             let roleResponse = await userFetchService.findOneRole(roleId);
@@ -280,8 +286,6 @@ async function editUser(modal, id) {
     })
 }
 
-
-// удаляем юзера из модалки удаления
 async function deleteUser(modal, id) {
     let preuser = await userFetchService.findOneUser(id)
     let user = preuser.json();
