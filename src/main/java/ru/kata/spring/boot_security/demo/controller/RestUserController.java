@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -27,6 +28,16 @@ public class RestUserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
 
     }
+    @GetMapping("/users/roles")
+    public ResponseEntity<List<Role>> apiGetAllRoles() {
+        return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
+
+    } //TODO: вынести в отдельный контроллер?
+    @GetMapping("/users/roles/{id}")
+    public ResponseEntity<Role> apiGetRoleById(@PathVariable Long id) {
+        return new ResponseEntity<>(roleService.getRole(id), HttpStatus.OK);
+
+    } //TODO: вынести в отдельный контроллер?
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> apiGetUser(@PathVariable Long id) {
@@ -46,7 +57,7 @@ public class RestUserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<String> apiUpdateUser(@RequestBody User user){
+    public ResponseEntity<String> apiUpdateUser(@RequestBody User user) {
         userService.updateUser(user);
         return new ResponseEntity<>("User was successfully updated", HttpStatus.OK);
     }
