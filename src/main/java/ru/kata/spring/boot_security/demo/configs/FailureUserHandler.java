@@ -15,7 +15,6 @@ public class FailureUserHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String errorMessage = exception.getLocalizedMessage();
         String errorType = exception.getClass().getSimpleName();
-        // Добавьте код для передачи errorMessage на вашу страницу авторизации
         response.sendRedirect("/home?error=" + errorMessage + "&errorType=" + errorType);
     }
 }

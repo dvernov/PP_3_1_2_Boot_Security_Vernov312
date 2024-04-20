@@ -28,11 +28,13 @@ public class RestUserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
 
     }
+
     @GetMapping("/users/roles")
     public ResponseEntity<List<Role>> apiGetAllRoles() {
         return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
 
     } //TODO: вынести в отдельный контроллер?
+
     @GetMapping("/users/roles/{id}")
     public ResponseEntity<Role> apiGetRoleById(@PathVariable Long id) {
         return new ResponseEntity<>(roleService.getRole(id), HttpStatus.OK);

@@ -47,11 +47,11 @@ async function getTableWithUsers() {
                             <td>${user.roles.map(role => role.name).join(', ')}</td>
                             <td>
                                 <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info" 
-                                data-toggle="modal" data-target="#someDefaultModal">Edit</button>
+                                data-toggle="modal" data-target="#dfaultModal">Edit</button>
                             </td>
                             <td>
                                 <button type="button" data-userid="${user.id}" data-action="delete" class="btn btn-outline-danger" 
-                                data-toggle="modal" data-target="#someDefaultModal">Delete</button>
+                                data-toggle="modal" data-target="#defaultModal">Delete</button>
                             </td>
                         </tr>
                 )`;
@@ -60,7 +60,7 @@ async function getTableWithUsers() {
         })
 
     $("#userTable").find('button').on('click', (event) => {
-        let defaultModal = $('#someDefaultModal');
+        let defaultModal = $('#defaultModal');
 
         let targetButton = $(event.target);
         let buttonUserId = targetButton.attr('data-userid');
@@ -73,7 +73,7 @@ async function getTableWithUsers() {
 }
 
 async function getDefaultModal() {
-    $('#someDefaultModal').modal({
+    $('#defaultModal').modal({
         keyboard: true,
         backdrop: "static",
         show: false
@@ -88,9 +88,6 @@ async function getDefaultModal() {
             case 'delete':
                 deleteUser(thisModal, userid);
                 break;
-            // case 'New User':
-            //     addNewUser();
-            //     break;
         }
     }).on("hidden.bs.modal", (e) => {
         let thisModal = $(e.target);
@@ -98,17 +95,16 @@ async function getDefaultModal() {
         thisModal.find('.modal-body').html('');
         thisModal.find('.modal-footer').html('');
     })
-    $('#someDefaultModal').on('click', '.btn-secondary', function () {
+    $('#defaultModal').on('click', '.btn-secondary', function () {
         $(this).closest('.modal').modal('hide');
     });
 }
 
 async function getNewUserForm() {
-    // let button = $(`#SliderNewUserForm`);
-    // let button = $(`#nav-profile`);
-    let form = $(`#defaultSomeForm`)
 
-    userFetchService.findAllRoles()
+    let form = $(`#defaultForm`)
+
+    await userFetchService.findAllRoles()
         .then(async (response) => {
             let rolesSelect = form.find("#roles");
             let roles = await response.json();
@@ -122,7 +118,7 @@ async function getNewUserForm() {
 
 async function addNewUser() {
     $('#addButton').on('click', async () => {
-        let addUserForm = $('#defaultSomeForm')
+        let addUserForm = $('#defaultForm')
         let firstname = addUserForm.find('#firstName').val().trim();
         let lastname = addUserForm.find('#lastName').val().trim();
         let email = addUserForm.find('#email').val().trim();
@@ -153,33 +149,16 @@ async function addNewUser() {
         const response = await userFetchService.addUser(data);
 
         if (response.ok) {
-            console.log(response)
-            //await getTableWithUsers();
-
-
-
-            // $('#nav-tab').ariaSelected('true');
-            // $('#nav-tab').class('nav-link active');
-            // $('#nav-profile-tab').ariaSelected('false');
-            // $('#nav-profile-tab').class('nav-link');
-
-            // addUserForm[0].reset();
+            await getTableWithUsers();
+            $('#nav-home-tab').tab('show');
+            $('#nav-profile-tab').removeClass('active').attr('aria-selected', 'false');
+            addUserForm[0].reset();
             // addUserForm.find('#firstName').val('');
             // addUserForm.find('#lastName').val('');
             // addUserForm.find('#email').val('');
             // addUserForm.find('#age').val('');
             // addUserForm.find('#username').val('');
         }
-        // else {
-        //     let body = await response.json();
-        //     let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
-        //                             ${body.info}
-        //                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        //                                 <span aria-hidden="true">&times;</span>
-        //                             </button>
-        //                         </div>`;
-        //     addUserForm.prepend(alert)
-        // }
     })
 }
 

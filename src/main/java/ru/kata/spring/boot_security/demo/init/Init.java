@@ -59,9 +59,6 @@ public class Init implements CommandLineRunner {
             user2.addRoleToUser(roleAdmin);
             roleRepository.saveAll(List.of(roleUser, roleAdmin));
             userRepository.saveAll(List.of(user1, user, user2));
-
-
         }
-
     }
 }
