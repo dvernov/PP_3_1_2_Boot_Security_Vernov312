@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -13,34 +12,38 @@
 <body>
 <div class="container text-center">
     <div class="col-md-2 mx-auto">
-        <form th:action="register" th:method="post" th:object="${newUserForm}">
-            <div>
-                <label for="firstName" class="form-label">First Name</label>
-                <input type="text" class="form-control" th:field="*{firstName}" id="firstName">
+        <div class="form-group align-items-center">
+            <form id="defaultForm">
+                <div>
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName">
 
-                <label for="lastName" class="form-label">Last Name</label>
-                <input type="text" class="form-control" th:field="*{lastName}" id="lastName">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName">
 
-                <label for="age" class="form-label">Age</label>
-                <input type="number" class="form-control" th:field="*{age}" id="age">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" class="form-control" id="age">
 
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" th:field="*{email}" id="email">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email">
 
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" th:field="*{username}" id="username">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username">
 
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" th:field="*{password}" id="password">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password">
 
-                <label class="form-label">Role</label>
-                <select th:name="role" th:id="roles" class="form-select" multiple>
-                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
-                </select>
-                <button type="submit" class="btn btn-success">Submit</button>
-            </div>
-        </form>
+                    <label class="form-label" for="roles">Role</label>
+                    <select class="form-select" id="roles" multiple>
+                    </select>
+                    <br>
+                    <button type="button" class="btn btn-success" id="addButton">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>
+<script>
+</script>
 </html>

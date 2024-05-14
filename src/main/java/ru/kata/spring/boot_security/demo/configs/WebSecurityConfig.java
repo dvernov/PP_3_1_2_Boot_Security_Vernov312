@@ -9,16 +9,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
+    private final FailureUserHandler failureUserHandler;
     private final UserDetailsService userDetailsService;
 
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsService userDetailsService) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, FailureUserHandler failureUserHandler, UserDetailsService userDetailsService) {
         this.successUserHandler = successUserHandler;
+        this.failureUserHandler = failureUserHandler;
         this.userDetailsService = userDetailsService;
     }
 
@@ -40,12 +41,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user").access("hasRole('USER') or hasRole('ADMIN')")
                 .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/api/**").permitAll()
                 .and()
+                .csrf().disable()
                 .formLogin()
                 .loginPage("/home")
                 .loginProcessingUrl("/login")
                 .permitAll()
                 .successHandler(successUserHandler)
+                .failureHandler(failureUserHandler)
                 .and()
                 .logout()
                 .logoutSuccessUrl("/home")

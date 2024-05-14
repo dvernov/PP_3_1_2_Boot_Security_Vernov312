@@ -40,14 +40,25 @@ public class Init implements CommandLineRunner {
             user1.setUsername("user");
             user1.setPassword(passwordEncoder.encode("user"));
 
+            User user2 = new User("test", "test", "test@mail.ru", 22);
+            user2.setUsername("test");
+            user2.setPassword(passwordEncoder.encode("test"));
+
             roleUser.addUserToRole(user);
+            roleUser.addUserToRole(user1);
+            roleUser.addUserToRole(user2);
+
+            roleAdmin.addUserToRole(user);
+            roleAdmin.addUserToRole(user2);
+
             user.addRoleToUser(roleAdmin);
             user.addRoleToUser(roleUser);
+
             user1.addRoleToUser(roleUser);
 
+            user2.addRoleToUser(roleAdmin);
             roleRepository.saveAll(List.of(roleUser, roleAdmin));
-            userRepository.saveAll(List.of(user1, user));
+            userRepository.saveAll(List.of(user1, user, user2));
         }
-
     }
 }
