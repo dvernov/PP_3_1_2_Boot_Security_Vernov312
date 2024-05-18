@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +34,7 @@ public class User implements UserDetails {
     @Column(length = 50)
     private String username;
 
+    @JsonIgnore
     private String password;
 
     @NonNull
