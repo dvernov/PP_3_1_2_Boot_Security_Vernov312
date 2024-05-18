@@ -8,4 +8,6 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query("from Role where id = :id")
     Role getRole(Long id);
+
+    Role findByName(String name);
 }

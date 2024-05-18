@@ -1,130 +1,65 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "all_users")
+@Table(name = "all_users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username", name = "UK_username")
+})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NonNull
     private String firstName;
+
+    @NonNull
     private String lastName;
 
-    @Column(unique = true)
+    @NonNull
+    @Column(length = 50)
     private String username;
 
     private String password;
 
+    @NonNull
     private String email;
+    @NonNull
     private int age;
 
     @ManyToMany
-    private Set<Role> roles;
-
-    public User() {
-    }
-
-    public User(String firstName, String lastName, String email, int age) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.age = age;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Role> roles = new TreeSet<>();
 
     public String getAllRolesString() {
-        StringBuilder str = new StringBuilder();
-        for (Role role : roles.stream().sorted(Comparator.comparing(Role::getName)).collect(Collectors.toList())) {
-            str.append(role.getName() + " ");
-        }
-        return str.toString();
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void addRoleToUser(Role role) {
-        if (roles == null) {
-            roles = new HashSet<>();
-        }
-        roles.add(role);
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+        return roles.stream()
+                .sorted(Comparator.comparing(Role::getName))
+                .map(Role::getName)
+                .collect(Collectors.joining(" "));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override

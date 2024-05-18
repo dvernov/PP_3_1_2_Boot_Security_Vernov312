@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -32,7 +34,8 @@ public class UserController {
             , @RequestParam(value = "role") List<Long> listOfRoleID) {
 
         for (Long roleId : listOfRoleID) {
-            newUserForm.addRoleToUser(roleService.getRole(roleId));
+            newUserForm.setRoles(Set.of(roleService.getRole(roleId)));
+//            newUserForm.addRoleToUser(roleService.getRole(roleId));
         }
 
         if (userService.findByUserName(newUserForm.getUsername()) == null) {
@@ -56,7 +59,8 @@ public class UserController {
             , @RequestParam(value = "role") List<Long> listOfRoleID) {
 
         for (Long roleId : listOfRoleID) {
-            user.addRoleToUser(roleService.getRole(roleId));
+            user.setRoles(Set.of(roleService.getRole(roleId)));
+//            user.addRoleToUser(roleService.getRole(roleId));
         }
         userService.updateUser(user);
         return "redirect:/admin";
