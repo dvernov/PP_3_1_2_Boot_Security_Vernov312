@@ -1,23 +1,27 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.util.CurrentUserUtils;
 
 import java.util.List;
-
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CurrentUserUtils currentUserUtils;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, CurrentUserUtils currentUserUtils) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.currentUserUtils = currentUserUtils;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(Long id) {
         if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
+            log.info("User with id: " + id + " was deleted by " + currentUserUtils.getCurrentUsername());
             return true;
         }
         return false;
@@ -50,6 +55,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        log.info("User with username: " + user.getUsername() + " was saved by " + currentUserUtils.getCurrentUsername());
         return true;
     }
 
@@ -58,6 +64,7 @@ public class UserServiceImpl implements UserService {
     public boolean updateUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        log.info("User with username: " + user.getUsername() + " was updated by " + currentUserUtils.getCurrentUsername());
         return true;
     }
 
