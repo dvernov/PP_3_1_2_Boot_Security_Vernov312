@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -35,10 +37,10 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(Long id) {
         if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
+            log.info("Пользователь с id = {} удален", id);
             return true;
         }
         return false;
-
     }
 
     @Override
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        log.info("Пользователь с id = {} добавлен", user.getId());
         return true;
     }
 
@@ -58,6 +61,7 @@ public class UserServiceImpl implements UserService {
     public boolean updateUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        log.info("Пользователь с id = {} обновлен", user.getId());
         return true;
     }
 
