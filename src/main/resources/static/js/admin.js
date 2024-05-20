@@ -133,7 +133,7 @@ async function addNewUser() {
             let roleData = await roleResponse.json();
             roles.push(roleData);
         }
-
+        console.log('kek')
         let data = {
             firstName: firstname,
             lastName: lastname,
@@ -145,7 +145,7 @@ async function addNewUser() {
                 return {id: role.id, name: role.name};
             }),
         }
-
+        console.log(data)
         const response = await userFetchService.addUser(data);
 
         if (response.ok) {

@@ -35,7 +35,6 @@ public class UserController {
 
         for (Long roleId : listOfRoleID) {
             newUserForm.setRoles(Set.of(roleService.getRole(roleId)));
-//            newUserForm.addRoleToUser(roleService.getRole(roleId));
         }
 
         if (userService.findByUserName(newUserForm.getUsername()) == null) {
